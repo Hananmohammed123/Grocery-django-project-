@@ -1,0 +1,131 @@
+{% extends 'admin_base.html' %}
+{% block main  %}
+
+<style>
+    .alert-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+
+    .alert-box {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .alert-buttons {
+        margin-top: 10px;
+    }
+
+    .alert-buttons button {
+        margin: 0 10px;
+    }
+</style>
+
+<div class="card shadow">
+    <div class="card-body">
+        <h5 class="p-2" style="border-bottom: 2px solid orange;">View Feedback</h5>
+        <div class="container-fluid">
+            <table class="table table-bordered table-sm" id="example">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>User</th>
+                        <th>View Comment</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in feedback %}
+                    <tr id="row-{{forloop.counter}}">
+                        <td>{{forloop.counter}}</td>
+                        <td>{{i.user.first_name}} {{i.user.last_name}}</td>
+                        <td>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal-{{forloop.counter}}">
+                                View Comment
+                            </button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal-{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">{{i.user.first_name}} {{i.user.last_name}}'s Feedback</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="changeStatus('{{i.id}}', '{{forloop.counter}}', '{{i.status}}')">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            {{i.message}}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <a href="#" class="text-danger" onclick="confirmAction('Are you sure you want to delete this feedback?', '/delete-feedback/{{i.id}}/')">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmAction(message, url) {
+        var confirmContainer = document.createElement('div');
+        confirmContainer.className = 'alert-container';
+        
+        var confirmBox = document.createElement('div');
+        confirmBox.className = 'alert-box';
+        confirmBox.innerHTML = message;
+        
+        var yesButton = document.createElement('button');
+        yesButton.textContent = 'Yes';
+        yesButton.className = 'btn btn-primary';
+        yesButton.addEventListener('click', function() {
+            window.location.href = url;
+            confirmContainer.parentNode.removeChild(confirmContainer);
+        });
+        
+        var noButton = document.createElement('button');
+        noButton.textContent = 'No';
+        noButton.className = 'btn btn-secondary';
+        noButton.addEventListener('click', function() {
+            confirmContainer.parentNode.removeChild(confirmContainer);
+        });
+        
+        var buttonsDiv = document.createElement('div');
+        buttonsDiv.className = 'alert-buttons';
+        buttonsDiv.appendChild(yesButton);
+        buttonsDiv.appendChild(noButton);
+        
+        confirmBox.appendChild(buttonsDiv);
+        confirmContainer.appendChild(confirmBox);
+        
+        document.body.appendChild(confirmContainer);
+    }
+
+    function changeStatus(pid, count, status_id) {
+        // Implement change status functionality here
+        console.log("Changing status for feedback with ID:", pid);
+    }
+</script>
+
+{% endblock %}

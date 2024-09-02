@@ -1,0 +1,66 @@
+{% include 'navigation.html' %}
+
+{% load static %}
+
+<link href="{% static 'css/simple-sidebar.css' %}" rel="stylesheet">
+
+<div class="d-flex" id="wrapper">
+  <!-- Sidebar -->
+  <div class="bg-light border-right" id="sidebar-wrapper">
+    <div class="sidebar-heading">Start Filtering</div>
+    <div class="list-group list-group-flush">
+      <a href="{% url 'user_product' 0 %}" class="list-group-item list-group-item-action bg-light">All Product</a>
+      {% for i in allcategory %}
+        <a href="{% url 'user_product' i.id %}" class="list-group-item list-group-item-action bg-light">{{ i.name }}</a>
+      {% endfor %}
+    </div>
+  </div>
+  
+  <!-- Page Content -->
+  <div id="page-content-wrapper">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+      <button class="btn btn-primary" id="menu-toggle">
+        <i class="fa fa-bars"></i>
+      </button>
+      <h4 class="mx-auto text-center text-danger">View {{ category.name }} Product</h4>
+    </nav>
+    
+    <div class="container-fluid mt-2">
+      <div class="row">
+        {% for j in product %}
+          <div class="col-6 col-md-4 col-lg-3 mb-4">
+            <div class="card h-100 text-center" style="border:1px solid lightgrey;">
+              <!-- Added inline styles for the image -->
+              <img class="card-img-top img-thumbnail" src="{{ j.image.url }}" alt="card-img" style="height: 200px; object-fit: cover; width: 100%;">
+              <div class="card-body">
+                <h6 class="card-title">{{ j.name }} Rs.{{ j.price }}</h6>
+                <p class="card-text" style="font-size:14px">{{ j.description }}</p>
+                <a href="/add-to-cart/{{ j.id }}/" class="btn btn-primary">
+                  <i class="fa fa-shopping-cart"></i> Add to cart
+                </a>
+                <a href="/product-detail/{{ j.id }}/" class="btn btn-warning">
+                  <i class="fa fa-info" style="font-size:22px"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body text-center">
+                <img src="{% static 'images/empty.jpg' %}" alt="No products available" class="img-fluid" />
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $("#menu-toggle").click(function(e) {
+    e.preventDefault();
+    $("#wrapper").toggleClass("toggled");
+  });
+</script>

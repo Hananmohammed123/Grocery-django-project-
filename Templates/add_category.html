@@ -1,0 +1,39 @@
+{% extends 'admin_base.html' %} 
+{% block main %} 
+<div class="card shadow"> 
+<div class="card-body"> 
+<h5 class="p-2" style="border-bottom: 2px solid orange;">Add 
+Category</h5> 
+<div class="container-fluid"> 
+<form action="" method="post" enctype="multipart/form-data"> 
+{% csrf_token %} 
+<div class="form-row"> 
+<div class="col-sm-12"> 
+<div class="form-group"> 
+<label>Category Name</label> 
+<input type="text" name="name" class="form-control" 
+placeholder="Category Name"> 
+</div> 
+</div> 
+</div> 
+<input type="submit" value="Submit" class="m-2 px-3 btn btn
+primary"> 
+</form> 
+</div> </div> 
+</div> 
+{% if msg %} 
+<script> 
+    var msg = '{{msg}}';
+    var alertBox = '<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; color: green; padding: 20px; border-radius: 5px; border: 1px solid #f5c6cb; box-shadow: white; z-index: 9999;" class="custom-alert">' + 
+                   '<div>' + msg + '</div>' + 
+              
+                 '<button style="margin-top: 10px; margin-left: auto; margin-right: auto; display: block; padding: 8px 20px; background-color:green; color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="closeAlert()">OK</button>' +
+                 '</div>';             document.body.insertAdjacentHTML('beforeend', alertBox);
+    
+    function closeAlert() {
+      var alertDiv = document.querySelector('.custom-alert');
+      alertDiv.parentNode.removeChild(alertDiv);
+    }
+  </script>
+{% endif %} 
+{% endblock %} 

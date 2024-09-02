@@ -1,0 +1,83 @@
+{% load static %}
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body id="login" style="background-image: url({% static 'images/online3.jpg' %}); background-size: cover;">
+    {% include 'navigation.html' %}
+    <hr class="mt-0">
+    <div class="row">
+        <div class="col-lg-5 m-auto">
+            <div class="card mt-5 bg-dark">
+                <div class="card-title text-center mt-3">
+                    <img src="{% static 'images/useravatar.png' %}" width="150" height="150">
+                    <h2 class="text-white">Admin Login</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'admin_login' %}">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fa fa-user fa-2x"></i>
+                                </span>
+                            </div>
+                            <input type="text" name="username" class="form-control py-4" placeholder="Username">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="fa fa-lock fa-2x"></i>
+                                </span>
+                            </div>
+                            <input type="password" name="password" id="password" class="form-control py-4" placeholder="Password">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="fa fa-eye" id="showPassword" style="cursor: pointer;"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <input type="submit" value="Login" class="btn btn-success px-5">
+                        <a href="{% url 'main' %}" class="float-right mt-2 text-white"><i class="fas fa-angle-double-left"></i> Go Back To HomePage</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Function to toggle password visibility
+        document.getElementById("showPassword").addEventListener("click", function () {
+            var passwordInput = document.getElementById("password");
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+            } else {
+                passwordInput.type = "password";
+            }
+        });
+    </script>
+    {% if msg %}
+    <script>
+        var msg = '{{ msg }}';
+        var isSuccess = {{ is_success|yesno:"true,false" }}; // This variable should be passed from the backend to indicate success or failure
+        var alertStyle = isSuccess ? 'background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb;' : 'background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;';
+        var buttonText = isSuccess ? 'OK' : 'Close';
+        var buttonAction = isSuccess ? 'redirect()' : 'closeAlert()';
+        var alertBox = '<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); ' + alertStyle + ' padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); z-index: 9999;" class="custom-alert">' +
+            '<div>' + msg + '</div>' +
+            '<button style="margin-top: 10px; margin-left: auto; margin-right: auto; display: block; padding: 8px 20px; background-color: ' + (isSuccess ? '#28a745' : '#dc3545') + '; color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="' + buttonAction + '">' + buttonText + '</button>' +
+            '</div>';
+        document.body.insertAdjacentHTML('beforeend', alertBox);
+
+        function redirect() {
+            window.location.href = "{% url 'admindashboard' %}";
+        }
+
+        function closeAlert() {
+            var alertDiv = document.querySelector('.custom-alert');
+            alertDiv.parentNode.removeChild(alertDiv);
+        }
+    </script>
+    {% endif %}
+</body>
+</html>

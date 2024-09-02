@@ -1,0 +1,178 @@
+{% extends 'admin_base.html' %}
+{% block main %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create an Account</title>
+    <style>
+        .custom-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            color: green;
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid #f5c6cb;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+        }
+        .custom-alert button {
+            margin-top: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            padding: 8px 20px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .alert-danger{
+            color:red;
+        }
+        .alert-danger button {
+            background-color: red;
+        }
+        .alert-warning {
+            color:orange;}
+            .alert-warning button{
+            background-color:orange;
+        }
+    </style>
+    <script>
+        function checkpass() {
+            var password = document.signup.password.value;
+            var confirmPassword = document.signup.cpwd.value;
+            if (password.length < 8) {
+                showAlert('Password must be at least 8 characters long', 'alert-danger');
+                document.signup.password.focus();
+                return false;
+            }
+            if (password !== confirmPassword) {
+                showAlert('Password and Confirm Password fields do not match', 'alert-warning');
+                document.signup.cpwd.focus();
+                return false;
+            }
+            return true;
+        }
+
+        function showAlert(message, className) {
+            var alertBox = '<div class="custom-alert ' + className + '">' +
+                           '<div>' + message + '</div>' +
+                           '<button onclick="closeAlert()">OK</button>' +
+                           '</div>';
+            document.body.insertAdjacentHTML('beforeend', alertBox);
+        }
+
+        function closeAlert() {
+            var alertDiv = document.querySelector('.custom-alert');
+            if (alertDiv) {
+                alertDiv.parentNode.removeChild(alertDiv);
+            }
+        }
+
+        function togglePasswordVisibility(fieldId, toggleId) {
+            var passwordField = document.getElementById(fieldId);
+            var passwordToggle = document.getElementById(toggleId);
+
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                passwordToggle.innerText = 'Hide Password';
+            } else {
+                passwordField.type = 'password';
+                passwordToggle.innerText = 'Show Password';
+            }
+        }
+    </script>
+</head>
+<body>
+    <hr class="mt-0">
+    <div class="card shadow m-5" id="signupform">
+        <div class="card-body">
+            <div class="container-fluid">
+                <h5 class="p-2" style="border-bottom: 2px solid orange; color: green;">Create an Account</h5>
+                <form method="POST" name="signup" onsubmit="return checkpass();" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" name="fname" placeholder="Enter First Name" class="form-control" pattern="[A-Za-z]+" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" name="lname" placeholder="Enter Last Name" class="form-control" pattern="[A-Za-z]+" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Email ID</label>
+                                <input type="email" name="email" placeholder="Email Address" required class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Contact</label>
+                                <input type="text" name="mobile" placeholder="Contact Number" required class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" id="password" name="password" placeholder="Enter Password" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                <input type="password" id="cpwd" name="cpwd" placeholder="Enter Password Again" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="show-password" onclick="togglePasswordVisibility('password', 'password-toggle')">
+                                <label class="form-check-label" for="show-password" id="password-toggle">Show Password</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group form-check">
+                                <input type="checkbox" class="form-check-input" id="show-confirm-password" onclick="togglePasswordVisibility('cpwd', 'confirm-password-toggle')">
+                                <label class="form-check-label" for="show-confirm-password" id="confirm-password-toggle">Show Confirm Password</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Upload PIC</label>
+                                <input type="file" name="image" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Address</label>
+                                <textarea name="address" class="form-control" placeholder="Full Address" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" value="Submit" class="m-2 px-3 btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+    {% if msg %}
+    <script>
+        var msg = '{{ msg }}';
+        showAlert(msg);
+    </script>
+    {% endif %}
+</body>
+</html>
+{% endblock %}

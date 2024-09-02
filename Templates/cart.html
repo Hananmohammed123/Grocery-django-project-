@@ -1,0 +1,102 @@
+{% load static custom_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <style>
+        @media (max-width: 767px) {
+            .input-group {
+                width: 100%;
+                margin-top: 0.5rem;
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+            }
+            .input-group .btn {
+                margin: 0 5px; 
+                width: 40px;
+                height: 40px;
+                padding: 0;
+            }
+            .input-group .form-control {
+                width: 100px; 
+                margin: 0;
+                text-align: center;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+{% include 'navigation.html' %}
+
+<div class="container mt-4">
+    <h2 class="font-weight-bold mb-4">
+        My Cart
+        <a href="/user-product/0/" class="btn btn-warning float-right ml-2">Continue Shopping</a>   
+        <a href="/booking/" class="btn btn-info float-right">Buy Now</a>
+    </h2>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i, j in product.items %}
+                <tr>
+                    <td data-label="Image">
+                        <img class="img-thumbnail" src="{{i|productimage}}" alt="product" style="width:100px; height:100px;">
+                    </td>
+                    <td data-label="Name"><a href="/product-detail/{{i}}/">{{i|productname}}</a></td>
+                    <td data-label="Price">{{i|productprice}}</td>
+                    
+
+                    <td data-label="Quantity"style="width:15%">
+                        <div class="input-group">
+                            <a href="/incredecre/{{i}}/?action=decre" class="btn btn-warning">-</a>
+                            <input type="text" class="form-control text-center" id="shop_qty-{{forloop.counter}}" name="qtybutton" value="{{j}}" readonly/>
+                            <a href="/incredecre/{{i}}/?action=incre" class="btn btn-warning">+</a>
+                        </div>
+                    </td>
+                    <td data-label="Total" id="totalprice-{{forloop.counter}}">{% producttotalprice i j %}</td>
+                    <td data-label="Delete">
+                        <a href="/deletecart/{{i}}/" class="btn btn-danger"><i class="fa fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="4" class="text-right font-weight-bold">Total:</td>
+                    <td colspan="2" id="total-price" class="font-weight-bold"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        var prolenth = '{{lengthpro}}';
+        var mytotal = 0;
+        for(var i = 1; i <= prolenth * 1; i++){
+            var totalprice = parseFloat($('#totalprice-' + i).text());
+            mytotal += totalprice;
+        }
+        $('#total-price').text(mytotal.toFixed(2));
+    });
+</script>
+</body>
+</html>

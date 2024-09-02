@@ -1,0 +1,84 @@
+{% load static %}
+<html>
+<head>
+    <title>Payment Page | Online Grocery</title>
+    <link rel="stylesheet" href="{% static 'css/payment.css' %}"/>
+</head>
+<body>
+<main class="container">
+    <div class="main">
+        <!-- Payment Method Section -->
+        <section class="payment_method">
+            <h2 class="ship_head">Payment Method</h2>
+            <div class="card_info">
+                <form action="" method="post">
+
+                    {% csrf_token %}
+                    <div class="card_head">
+                        <h2 class="card_title">Debit or Credit Card</h2>
+                    </div>
+                    <div class="card_types">
+                        <img class="card_img" src="https://cdn-icons-png.flaticon.com/512/349/349221.png" alt="Visa"/>
+                        <img class="card_img" src="https://cdn-icons-png.flaticon.com/512/349/349230.png" alt="MasterCard"/>
+                        <img class="card_img" src="https://cdn-icons-png.flaticon.com/512/349/349228.png" alt="American Express"/>
+                        <img class="card_img" src="https://img.icons8.com/fluency/512/mastercard.png" alt="MasterCard"/>
+                    </div>
+                    <input type="text" name="holder_name" placeholder="Card Holder" maxlength="60" required/>
+                    <input type="text" name="number" placeholder="Card Number" maxlength="16" pattern="\d{16}" required/>
+                    <div>
+                        <input type="text" name="expiry" placeholder="MM/YY" maxlength="5" pattern="\d{2}/\d{2}" required/>
+                        <input type="text" name="cvc" placeholder="CVC" maxlength="3" pattern="\d{3}" required/>
+                    </div>
+                    <label class="save_card">
+                        <input type="checkbox" name="save_card" value="yes"/> Save Card
+                    </label>
+                    <button type="submit" class="confirm_btn">Confirm</button>
+                </form>
+            </div>
+            <div class="e_payment">
+                <div class="pay">
+                    <img src="https://cdn-icons-png.flaticon.com/512/6124/6124998.png" alt="PayPal"/>
+                </div>
+                <div class="pay">
+                    <img src="https://cdn-icons-png.flaticon.com/512/5977/5977576.png" alt="Apple Pay"/>
+                </div>
+                <div class="pay">
+                    <img src="https://cdn-icons-png.flaticon.com/512/196/196565.png" alt="Google Pay"/>
+                </div>
+            </div>
+        </section>
+
+        <!-- Order Summary Section -->
+        <section class="order_summary">
+            <h2 class="order_head">Order Summary</h2>
+            <div class="order_price">
+                <hr/>
+                <div class="price">
+                    <p>Order price:</p>
+                    <p>Rs.{{ total|floatformat:2 }}</p>
+                </div>
+                <div class="price">
+                    <p>Shipping:</p>
+                    <p>0.00</p>
+                </div>
+                <div class="price">
+                    <p>Tax:</p>
+                    <p>0.00</p>
+                </div>
+                <br/>
+                <hr/>
+                <div class="total_price">
+                    <p class="dark">Total:</p>
+                    <p class="dark">Rs.{{ total}}</p>
+                </div>
+            </div>
+            <img class="qr_code" src="https://cdn-icons-png.flaticon.com/512/714/714390.png" alt="QR Code"/>
+            <p class="condition">
+                Pay and Confirm Order by QR Code Using <b>Mobile Application</b>
+            </p>
+            <button class="review_btn">Review and Confirm</button>
+        </section>
+    </div>
+</main>
+</body>
+</html>
